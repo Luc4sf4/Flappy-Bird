@@ -35,7 +35,8 @@ public class FlappyBird extends JPanel implements  ActionListener {
     }
     // Game Logic
     Bird bird;
-    int velocityY = -6;
+    int velocityY = -9;
+    int gravity = 1;//every frames bird goes down 1 px
 
     Timer gameLoop;
 
@@ -53,7 +54,7 @@ public class FlappyBird extends JPanel implements  ActionListener {
         //Bird
         bird = new Bird(birdImg);
 
-        //game timer
+        //game timer(draws the frame for our game)
         gameLoop = new Timer(1000/60, this);
         gameLoop.start();
     }
@@ -65,8 +66,13 @@ public class FlappyBird extends JPanel implements  ActionListener {
 
     public void move(){
         //bir move
-        bird.y += velocityY;
-        bird.y = Math.max(bird.y, 0);
+        velocityY += gravity;//gravity setting to the bird velocity
+        bird.y += velocityY;//bird moves upwards
+        bird.y = Math.max(bird.y, 0);// very top of the screen
+
+
+
+
     }
 
     public void draw(Graphics g){

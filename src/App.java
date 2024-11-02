@@ -15,6 +15,7 @@ public class App {
         FlappyBird flappyBird = new FlappyBird();
         frame.add(flappyBird);
         frame.pack();// nao inclui a barra do java no jFrame
+        flappyBird.requestFocus();
         frame.setVisible(true);
 
 

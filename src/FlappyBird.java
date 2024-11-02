@@ -39,18 +39,20 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     int pipeWidth = 64;// scaled by /16
     int pipeHeight = 512;
 
-    class Pipe{
+    class Pipe {
         int x = pipeX;
-        int y = pipeY;;
+        int y = pipeY;
+        ;
         int width = pipeWidth;
         int height = pipeHeight;
         Image img;
         boolean passed = false; //check if the bird passed the pipe
 
-        Pipe(Image img){
+        Pipe(Image img) {
             this.img = img;
         }
     }
+
     ArrayList<Pipe> pipes;
     Random random = new Random();
 
@@ -95,12 +97,12 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         gameLoop.start();
     }
 
-    public void placePipes(){
+    public void placePipes() {
 
         //(0-1) * pipeHeight/2 -> (0 -256)
         // 128
         //0 - 128 -(0- 256) -->  pipeHeight /4 -> 3/4 pipeHeight
-        int randomPipeY = (int) (pipeY - pipeHeight / 4 - Math.random() * (pipeHeight /2));
+        int randomPipeY = (int) (pipeY - pipeHeight / 4 - Math.random() * (pipeHeight / 2));
         int openingSpace = boardHeight / 4;
 
         Pipe topPipe = new Pipe(topPipeImg);
@@ -125,12 +127,16 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         bird.y = Math.max(bird.y, 0);// very top of the screen
 
         //pipes
-        for(int i = 0; i < pipes.size(); i++){
+        for (int i = 0; i < pipes.size(); i++) {
             Pipe pipe = pipes.get(i);
             pipe.x += velocityX;
+
+            if(collision(bird, pipe)){
+                gameOver = true;
+            }
         }
 
-        if(bird.y > boardHeight){
+        if (bird.y > boardHeight) {
             gameOver = true;
         }
 
@@ -144,18 +150,26 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         g.drawImage(bird.img, bird.x, bird.y, bird.width, bird.height, null);
 
         //pipes
-        for(int i = 0; i <pipes.size(); i++){
+        for (int i = 0; i < pipes.size(); i++) {
             Pipe pipe = pipes.get(i);
             g.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height, null);
         }
 
     }
 
+    public boolean collision(Bird a, Pipe b) {
+        return a.x < b.x + b.width && //a's top left corner doesn't reach b's top right corner
+                a.x + a.width > b.x &&//a's top right corner passes b's top left corner
+                a.y < b.y +  b.height &&// a's top left corner doesn't reach b's bottom left corner
+                a.y + a.height > b.y; // a's bottom left corner passes b's top left corner
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         move();
         repaint();
-        if(gameOver){
+        if (gameOver) {
             placePipesTimer.stop();
             gameLoop.stop();
         }
